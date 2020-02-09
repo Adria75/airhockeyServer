@@ -3,7 +3,7 @@
  * @type {import("../typings/phaser")}
  */
 
-class Client{
+class Client {
     constructor() {
         // this.init();
 
@@ -23,40 +23,42 @@ class Client{
     }
 
     serverInfo() {
-    this.socket.on('testOk', function (data) {
-        console.log(data);
-    });
+        this.socket.on('testOk', function (data) {
+            console.log(data);
+        });
     }
 
-    askNewPlayer = function(){
-        this.socket.emit('newplayer');       
+    askNewPlayer = function () {
+        this.socket.emit('newplayer');
     };
 
-    movePlayer = function(x,y){
-        this.socket.emit('pointermove', {x:x, y:y});
-      };
+    movePlayer = function (x, y) {
+        this.socket.emit('pointermove', { x: x, y: y});
     };
 
-    startInfo = function(){
-        this.socket.on('newplayer',function(data){
-            game.scene.getScene('Game').addNewPlayer(data.id,data.x,data.y);
+
+    startInfo = function () {
+        this.socket.on('newplayer', function (data) {
+            // game.scene.getScene('Game').addNewPlayer(data.id, data.x, data.y);
         });
-        this.socket.on('allplayers',function(data){
-            for(var i = 0; i < data.length; i++){
-                game.scene.getScene('Game').addNewPlayer(data[i].id,data[i].x,data[i].y);
+        this.socket.on('allplayers', function (data) {
+            for (var i = 0; i < data.length; i++) {
+                game.scene.getScene('Game').addNewPlayer(data[i].id, data[i].x, data[i].y);
             }
-        
 
-            this.socket.on('move',function(data){
-                game.scene.getScene('Game').movePlayer(data.id,data.x,data.y);
-            });
+
+            
 
             // game.scene.getScene('Game').movePlayer(data.id,data.x,data.y);
             // Client.socket.on('remove',function(id){
             //     game.removePlayer(id);
             // });
         });
-    }
 
+        this.socket.on('move', function (data,pointer) {
+            game.scene.getScene('Game').movePlayer(data.id, data.x, data.y);
+        });
+    }
+}
 
 const cliente = new Client();

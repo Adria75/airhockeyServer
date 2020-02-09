@@ -45,9 +45,10 @@ io.on('connection', function (socket) {
 
         socket.emit('allplayers',getAllPlayers());
         socket.broadcast.emit('newplayer',socket.player);
+        // getAllEnemies();
 
         socket.on('pointermove',function(data){
-            console.log('click to '+data.x+', '+data.y);
+            // console.log('click to '+data.x+', '+data.y);
             socket.player.x = data.x;
             socket.player.y = data.y;
             io.emit('move',socket.player);
@@ -65,16 +66,7 @@ io.on('connection', function (socket) {
         // });
     });
 
-    function getAllEnemies() {
-        var players = [];
-        Object.keys(io.sockets.connected).forEach(function (socketID) {
-            var player = io.sockets.connected[socketID].player;
-            if (player) {
-                players.push(player);
-            };
-        });
-        return players;
-    }
+    
 
 });
 
@@ -87,6 +79,16 @@ function getAllPlayers() {
     return players;
 }
 
+function getAllEnemies() {
+    var players = [];
+    Object.keys(io.sockets.connected).forEach(function (socketID) {
+        var player = io.sockets.connected[socketID].player;
+        if (player) {
+            players.push(player);
+        };
+    });
+    return players;
+}
 
 
 
