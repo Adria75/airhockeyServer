@@ -49,9 +49,11 @@ io.on('connection', function (socket) {
 
         socket.on('pointermove',function(data){
             // console.log('click to '+data.x+', '+data.y);
+            // console.log(socket.player.id);
+            
             socket.player.x = data.x;
             socket.player.y = data.y;
-            io.emit('move',socket.player);
+            socket.broadcast.emit('move',socket.player);
         });
 
         // socket.on('click',function(data){

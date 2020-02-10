@@ -30,6 +30,7 @@ class Game extends Phaser.Scene {
         this.player;
         this.pointer;
         this.playerMap = {};
+        this.isDown;
 
         /**
          * Creem background
@@ -66,6 +67,7 @@ class Game extends Phaser.Scene {
         this.physics.world.enableBody(this.puck);
         this.puck.setCircle(21);
         this.puck.setBounce(0.8, 0.8);
+        this.puck.setCollideWorldBounds(true);
 
         this.keys = {
             R: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
@@ -79,8 +81,8 @@ class Game extends Phaser.Scene {
 
         cliente.askNewPlayer();
 
-        // this.physics.add.overlap(this.player, this.goals, this.overlapGoals, null, this);
-        // this.paddle.setCircle(27);
+        this.physics.add.overlap(this.puck, this.goals, this.overlapGoals, null, this);
+
 
 
         this.input.on('pointermove', function (pointer) {
@@ -91,39 +93,62 @@ class Game extends Phaser.Scene {
 
             this.test.setPosition(pointer.x, pointer.y);
             if (this.player != null) {
-                // console.log(this.player.x);
+                if (this.isDown) {
+                    this.physics.moveToObject(this.player, pointer, 1000);
 
-                this.physics.moveToObject(this.player, pointer, 1000);
+                }
+                else {
+                    this.player.body.stop();
+                }
 
-                // cliente.movePlayer(this.pointer.x, this.pointer.y);
             }
+            
 
 
+
+        }, this);
+
+        this.input.on('pointerdown', function () {
+            this.isDown = true;
+        }, this);
+        this.input.on('pointerup', function () {
+            this.isDown = false;
         }, this);
     }
 
     update() {
         if (this.keys.R.isDown) {
-            console.log('ola');
+            
 
-            cliente.sendTest();
+            
 
         }
+        // console.log(this.player);
 
+        if (this.player != null) {
+            cliente.movePlayer(this.player.x,this.player.y)
+        }
 
-
+ 
     }
 
     /**
      * Mètode que afegeix l'enemic al entrar a la sala
      */
-    addNewPlayer = function (id, x, y) {
+    addNewPlayer(id, x, y) {
 
         this.playerMap[id] = this.physics.add.sprite(50, 50, 'paddle');
 
         this.player = this.playerMap[id];
 
+        this.physics.world.enableBody(this.player);
+
         this.player.setCollideWorldBounds(true);
+
+        this.player.setCircle(27);
+        console.log(this.puck);
+
+        this.physics.add.collider(this.player, this.puck);
     };
 
     /**
@@ -142,7 +167,7 @@ class Game extends Phaser.Scene {
         // tween.start();
         // console.log(player);
 
-        this.physics.moveToObject(this.playerMap[id], destination, 1000);
+        this.physics.moveToObject(player, destination, 1000);
 
     };
 

@@ -39,7 +39,7 @@ class Client {
 
     startInfo = function () {
         this.socket.on('newplayer', function (data) {
-            // game.scene.getScene('Game').addNewPlayer(data.id, data.x, data.y);
+            game.scene.getScene('Game').addNewPlayer(data.id, data.x, data.y);
         });
         this.socket.on('allplayers', function (data) {
             for (var i = 0; i < data.length; i++) {
