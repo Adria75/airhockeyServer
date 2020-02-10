@@ -49,12 +49,23 @@ class Game extends Phaser.Scene {
         this.goals.add(this.goalRight);
         this.physics.world.enableBody(this.goalLeft);
         this.physics.world.enableBody(this.goalRight);
-        // this.puck.setBounce(0.8, 0.8);
+
+
 
         /**
          * Afegim la "pilota"
          */
+
+        /**
+         * Interaccions entre elements
+         */
+        // this.physics.add.overlap(this.paddle, this.test, this.collidePuck, null, this);
+
+
         this.puck = this.physics.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY, 'puck');
+        this.physics.world.enableBody(this.puck);
+        this.puck.setCircle(21);
+        this.puck.setBounce(0.8, 0.8);
 
         this.keys = {
             R: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
@@ -67,6 +78,9 @@ class Game extends Phaser.Scene {
 
 
         cliente.askNewPlayer();
+
+        // this.physics.add.overlap(this.player, this.goals, this.overlapGoals, null, this);
+        // this.paddle.setCircle(27);
 
 
         this.input.on('pointermove', function (pointer) {
@@ -131,6 +145,22 @@ class Game extends Phaser.Scene {
         this.physics.moveToObject(this.playerMap[id], destination, 1000);
 
     };
+
+    overlapGoals(puck, goal) {
+        this.puck.body.stop();
+        this.puck.setPosition(this.cameras.main.centerX, this.cameras.main.centerY);
+        console.log(goal);
+
+        // if (goal.left == true) {
+        //     this.player2Score++;
+        //     this.player2ScoreText.text = 'Jugador 2: ' + this.player2Score;
+
+        // }
+        // else {
+        //     this.player1Score++;
+        //     this.player1ScoreText.text = 'Jugador 1: ' + this.player1Score;
+        // }
+    }
 }
 
 
